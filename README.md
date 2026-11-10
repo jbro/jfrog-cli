@@ -182,6 +182,8 @@ and has a dedicated set of commands for each product.
 To learn how to use JFrog CLI, please visit
 the [JFrog CLI User Guide](https://jfrog.com/help/r/jfrog-cli).
 
+For opt-in OS keychain support, see [Credential Storage](guides/credential-storage.md).
+
 # JFrog CLI Plugins
 
 [JFrog CLI Plugins](https://docs.jfrog.com/integrations/docs/jfrog-cli-plugins) support enhancing the functionality of JFrog CLI to meet the specific user and organization needs. The

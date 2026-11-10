@@ -13,10 +13,10 @@ import (
 
 	"github.com/jfrog/jfrog-client-go/auth/cert"
 
+	commonCliUtils "github.com/jfrog/jfrog-cli-core/v2/common/cliutils"
 	"github.com/jfrog/jfrog-cli-core/v2/common/commands"
 	coreformat "github.com/jfrog/jfrog-cli-core/v2/common/format"
 	corecommon "github.com/jfrog/jfrog-cli-core/v2/docs/common"
-	commonCliUtils "github.com/jfrog/jfrog-cli-core/v2/common/cliutils"
 	coreconfig "github.com/jfrog/jfrog-cli-core/v2/utils/config"
 	"github.com/jfrog/jfrog-cli-core/v2/utils/coreutils"
 	"github.com/jfrog/jfrog-cli/docs/config/add"
@@ -37,6 +37,13 @@ import (
 
 func GetCommands() []cli.Command {
 	return cliutils.GetSortedCommands(cli.CommandsByName{
+		{
+			Name:        "storage",
+			Usage:       "Select credential storage and migrate existing credentials (keychain or file).",
+			ArgsUsage:   "<keychain|file>",
+			Description: "Keychain storage is opt-in and requires an available OS credential store. File storage uses existing CLI encryption settings. No automatic fallback is performed.",
+			Action:      storageCmd,
+		},
 		{
 			Name:         "add",
 			Usage:        corecommon.ResolveDescription(add.GetDescription(), add.GetAIDescription()),
@@ -95,6 +102,17 @@ func GetCommands() []cli.Command {
 			Action:       useCmd,
 		},
 	})
+}
+
+func storageCmd(c *cli.Context) error {
+	if c.NArg() != 1 {
+		return cliutils.WrongNumberOfArgumentsHandler(c)
+	}
+	if err := coreconfig.SetCredentialStore(c.Args().Get(0)); err != nil {
+		return err
+	}
+	log.Output("Credential storage set to " + c.Args().Get(0) + ".")
+	return nil
 }
 
 func addCmd(c *cli.Context) error {
